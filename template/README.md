@@ -1,9 +1,5 @@
 # Template de TP
-# Todo
 
-- Auto-install third parties (glm/assimp)
-- simpler camera
-- simple template shader
 
 ## Dépendances
 
@@ -25,8 +21,29 @@ Normalement le script de compilation s'occupe de compiler les deux modules une f
 
 ## Compilation
 
+Pour créer le makefile :
 ```
-mkdir build
-cd build
-cmake ..
+template/$ mkdir build
+template/$ cd build
+template/build$ cmake ..
 ```
+
+Pour tout compiler :
+```
+template/build$ make
+```
+
+Pour compiler le tp seulement :
+```
+template/build$ make tp
+```
+
+## Exécution
+
+```
+./tp ../data/bunny.obj # utilise le modèle bunny.obj du dossier `data`
+./tp ../data/ToyCar.glb # utilise le modèle ToyCar.glb du dossier `data`
+./tp <anyformat> # ce que vous voulez comme format suppporté par Assimp
+```
+
+
