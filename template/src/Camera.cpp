@@ -30,7 +30,7 @@ Camera::Camera () {
 	farPlane = 10000.0;
 	projection = getProjectionMatrix();
 
-	position = glm::vec3(5, 5, 5);
+	position = glm::vec3(1, 0, 0);
 	forward = glm::vec3(0) - position;
 	forward = glm::normalize(forward);
 	up = glm::vec3(0, 1, 0);
@@ -47,7 +47,12 @@ void Camera::resize (int _W, int _H) {
 }
 
 void Camera::move (float dx, float dy, float dz) {
-	position += glm::vec3(dx, dy, dz);
+	// We change it for a orbit camera (instead of freefly)
+	glm::vec3 right = glm::cross(forward, up);
+	glm::vec3 tmpUp = glm::cross(forward, right);
+	position += dy * tmpUp - right * dx + forward * dz;
+	// we update forward with new position of camera
+	forward = glm::normalize(target - position);
 }
 
 

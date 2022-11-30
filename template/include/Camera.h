@@ -44,6 +44,7 @@ struct Camera {
 	// glm::quat last;
 	// look At based view
 	glm::vec3 position;
+	glm::vec3 target;
 	glm::vec3 forward;
 	glm::vec3 up;
 

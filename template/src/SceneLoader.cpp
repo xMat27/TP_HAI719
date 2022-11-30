@@ -35,6 +35,7 @@ Mesh* createMesh(aiMesh* mesh) {
 	glMesh->mNumVertices = mesh->mNumVertices;
 	glMesh->mNumFaces = mesh->mNumFaces;
 
+	glMesh->center = glm::vec3();
 	for (int i = 0; i < mesh->mNumVertices; ++i) {
 		glMesh->center += glm::vec3(mesh->mVertices[i][0], mesh->mVertices[i][1], mesh->mVertices[i][2]);
 	}
@@ -45,13 +46,16 @@ Mesh* createMesh(aiMesh* mesh) {
 	glBufferData(GL_ARRAY_BUFFER, mesh->mNumVertices * sizeof(aiVector3D), mesh->mVertices, GL_STATIC_DRAW);
 	glGenBuffers(1, &glMesh->normalsBuffer);
 	glBindBuffer(GL_ARRAY_BUFFER, glMesh->normalsBuffer);
+	std::cerr << "normals:" << (mesh->mNormals!=nullptr) << std::endl;
 	glBufferData(GL_ARRAY_BUFFER, mesh->mNumVertices * sizeof(aiVector3D), mesh->mNormals, GL_STATIC_DRAW);
 	glGenBuffers(1, &glMesh->tangentsBuffer);
 	glBindBuffer(GL_ARRAY_BUFFER, glMesh->tangentsBuffer);
+	std::cerr << "tangents:" << (mesh->mTangents!=nullptr) << std::endl;
 	glBufferData(GL_ARRAY_BUFFER, mesh->mNumVertices * sizeof(aiVector3D), mesh->mTangents, GL_STATIC_DRAW);
 	if (mesh->HasTextureCoords(0)) {
 		glGenBuffers(1, &glMesh->uv0Buffer);
 		glBindBuffer(GL_ARRAY_BUFFER, glMesh->uv0Buffer);
+		std::cerr << "texCoords:" << (mesh->mTextureCoords!=nullptr) << std::endl;
 		glBufferData(GL_ARRAY_BUFFER, mesh->mNumVertices * sizeof(aiVector3D), mesh->mTextureCoords[0], GL_STATIC_DRAW);
 	}
 	std::vector<unsigned int> indices;
@@ -86,11 +90,10 @@ void loadDataWithAssimp(const std::string& path) {
 	std::cerr << std::filesystem::current_path() / path << std::endl;
 	std::cerr << "importer" << std::endl;
 	const aiScene* scene = importer.ReadFile(path,
-		// aiProcess_GenSmoothNormals       |
+		aiProcess_GenSmoothNormals       |
 		aiProcess_CalcTangentSpace
 		| aiProcess_Triangulate
-		| aiProcess_JoinIdenticalVertices
-		| aiProcess_SortByPType);
+		| aiProcess_JoinIdenticalVertices);
 		std::cerr << "importer done" << std::endl;
 		if (nullptr == scene) {
 			std::cerr << "Failed to load scene: "  << path << std::endl;

@@ -38,18 +38,11 @@ static GLint window;
 void init() {
 	// Context::camera.initPos();
 	Context::camera.resize(SCREENWIDTH, SCREENHEIGHT);
-	// Context::camera.initPos();
-	// Context::camera.setPos(1.0, 1.0, 1.0);
-	// Context::camera.lookAt(0.0, 0.0, 0.0);
-
-	std::cerr << "view:" << glm::to_string(Context::camera.view) << std::endl;
-	// initLight ();
-	// glCullFace (GL_BACK);
-	// glEnable (GL_CULL_FACE);
-	// glDepthFunc (GL_LESS);
-	// glEnable (GL_DEPTH_TEST);
+	glCullFace (GL_BACK);
+	glEnable (GL_CULL_FACE);
+	glDepthFunc (GL_LESS);
+	glEnable (GL_DEPTH_TEST);
 	glClearColor (0.2f, 0.2f, 0.3f, 1.0f);
-	// glEnable(GL_COLOR_MATERIAL);
 
 	// Initialize GLEW
 	glewExperimental = true; // Needed for core profile
@@ -59,75 +52,82 @@ void init() {
 	}
 }
 
+void beforeLoop() {
+	// Take first instance center as target
+	if (!Context::instances.empty()) {
+		glm::vec3 centerOfInstance0 = Context::instances.at(0).mesh->center;
+		std::cerr << glm::to_string(centerOfInstance0) << std::endl;
+
+		glm::vec3 target(Context::instances.at(0).matrix * glm::vec4(centerOfInstance0, 1.0));
+		Context::camera.position = glm::vec3(0.5,0.5,0.5);
+		Context::camera.target = target;//lookat
+		Context::camera.forward = glm::normalize(target - Context::camera.position);
+		Context::camera.view = Context::camera.getViewMatrix();
+	}
+
+	// std::cerr << "projection:" << glm::to_string(Context::camera::projection) << std::endl;
+	// std::cerr << "view:" << glm::to_string(Context::camera::view) << std::endl;
+
+}
+
 
 void draw() {
 	if (Context::refreshMatrices) {
-		// Context::camera::projection = Context::camera.getProjectionMatrix();
-		// Context::camera::view = Context::camera.getViewMatrix();
-		//
-		// Context::camera::projection = glm::perspective(
-		// 	glm::radians(65.0f),
-		// 	(float)SCREENWIDTH/(float)SCREENHEIGHT,
-		// 	0.001f,
-		// 	10000.0f);
-		// 	Context::camera::view = glm::lookAt(glm::vec3(0.25, 0.25, 0.25), glm::vec3(0, 0, 0), glm::vec3(0, 1, 0));
-			// std::cerr << "projection:" << glm::to_string(Context::camera::projection) << std::endl;
-			// std::cerr << "view:" << glm::to_string(Context::camera::view) << std::endl;
-			Context::refreshMatrices = false;
-		}
-		// Clear the screen
-		glClear(GL_COLOR_BUFFER_BIT);
-
-		for (int i = 0; i < Context::instances.size(); ++i) {
-			Instance& inst = Context::instances[i];
-			Material* material = inst.material;
-			Mesh* mesh = inst.mesh;
-			material->bind();
-			if (Context::refreshMatrices) {
-				material->setMatrices(Context::camera.projection, Context::camera.view, inst.matrix);
-			}
-			mesh->draw();
-		}
-
+		// Context::camera.refreshMatrices();
+		Context::camera.view = Context::camera.getViewMatrix();
+		Context::camera.projection = Context::camera.getProjectionMatrix();
 		Context::refreshMatrices = false;
 	}
+	// Clear the screen
+	glClear(GL_COLOR_BUFFER_BIT);
 
-
-	void display() {
-		glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
-		draw();
-		glFlush();
-		glutSwapBuffers();
+	for (int i = 0; i < Context::instances.size(); ++i) {
+		Instance& inst = Context::instances[i];
+		Material* material = inst.material;
+		Mesh* mesh = inst.mesh;
+		material->bind();
+		material->setMatrices(Context::camera.projection, Context::camera.view, inst.matrix);
+		mesh->draw();
 	}
+}
+
+
+void display() {
+	glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
+	draw();
+	glFlush();
+	glutSwapBuffers();
+}
 
 
 
 
-	int main (int argc, char ** argv) {
-		if (argc < 2) {
-			std::cerr << "Missing parameter: <path-to-model>" << std::endl;
-			exit (EXIT_FAILURE);
-		}
-		glutInit(&argc, argv);
-		glutInitDisplayMode(GLUT_RGBA | GLUT_DEPTH | GLUT_DOUBLE);
-		glutInitWindowSize(SCREENWIDTH, SCREENHEIGHT);
-		window = glutCreateWindow("TP");
-
-		init();
-		glutIdleFunc(idle);
-		glutDisplayFunc(display);
-		glutKeyboardFunc(key);
-		glutReshapeFunc(reshape);
-		glutMotionFunc(motion);
-		glutMouseFunc(mouse);
-		key('?', 0, 0);
-
-		std::string path(argv[1]);
-		loadDataWithAssimp(path);
-
-		// Dark blue background
-		glClearColor(0.0f, 0.0f, 0.4f, 0.0f);
-		glutMainLoop();
-		clearContext();
-		return EXIT_SUCCESS;
+int main (int argc, char ** argv) {
+	if (argc < 2) {
+		std::cerr << "Missing parameter: <path-to-model>" << std::endl;
+		exit (EXIT_FAILURE);
 	}
+	glutInit(&argc, argv);
+	glutInitDisplayMode(GLUT_RGBA | GLUT_DEPTH | GLUT_DOUBLE);
+	glutInitWindowSize(SCREENWIDTH, SCREENHEIGHT);
+	window = glutCreateWindow("TP");
+
+	init();
+	glutIdleFunc(idle);
+	glutDisplayFunc(display);
+	glutKeyboardFunc(key);
+	glutReshapeFunc(reshape);
+	glutMotionFunc(motion);
+	glutMouseFunc(mouse);
+	key('?', 0, 0);
+
+	std::string path(argv[1]);
+	loadDataWithAssimp(path);
+	beforeLoop();
+
+	// Dark blue background
+	glClearColor(0.0f, 0.0f, 0.4f, 0.0f);
+	glutMainLoop();
+	clearContext();
+	return EXIT_SUCCESS;
+}
