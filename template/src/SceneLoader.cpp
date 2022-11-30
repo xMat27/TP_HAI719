@@ -10,6 +10,7 @@
 #include <queue>
 #include <vector>
 #include <map>
+#include <iostream>
 #include <filesystem>
 // GLM includes
 #include <glm/gtx/string_cast.hpp>
@@ -151,7 +152,7 @@ void loadDataWithAssimp(const std::string& path) {
 				queue.push({model, child});
 			}
 		}
-		std::cout << Context::instances.size() << " instances loaded" << std::endl;
+		std::cerr << Context::instances.size() << " instances loaded" << std::endl;
 		delete stream;
 		importer.FreeScene();
 	}

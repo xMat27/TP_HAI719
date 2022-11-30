@@ -21,7 +21,6 @@
 #include "Camera.h"
 #include "Shader.h"
 #include "Material.h"
-#include "UnlitMaterial.h"
 #include "Context.h"
 #include "Mouse.h"
 #include "Keyboard.h"

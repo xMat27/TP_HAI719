@@ -1,6 +1,6 @@
 #ifndef MATERIAL_H_DEFINED
 #define MATERIAL_H_DEFINED
-#include <GL/gl.h>
+#include <GL/glew.h>
 #include <GL/glut.h>
 #include <glm/glm.hpp>
 #include <glm/gtc/type_ptr.hpp>

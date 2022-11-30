@@ -1,7 +1,7 @@
 #ifndef MESH_H_DEFINED
 #define MESH_H_DEFINED
 
-#include <GL/gl.h>
+#include <GL/glew.h>
 
 #include <glm/glm.hpp>
 
