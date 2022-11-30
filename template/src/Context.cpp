@@ -19,8 +19,6 @@ std::vector<Material*> Context::materials;
 std::vector<Mesh*> Context::meshes;
 bool Context::refreshMatrices = true;
 bool Context::fullScreen = false;
-glm::mat4 Context::view(1);
-glm::mat4 Context::projection(1);
 
 void clearContext() {
   for (Mesh* mesh: Context::meshes) {

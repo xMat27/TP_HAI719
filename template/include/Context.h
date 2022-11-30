@@ -20,9 +20,6 @@ struct Instance {
 };
 
 struct Context {
-  static glm::mat4 view;
-  static glm::mat4 projection;
-
   static Camera camera;
   static bool fullScreen;
   static bool refreshMatrices;
@@ -35,7 +32,6 @@ struct Context {
 
 void idle();
 void reshape(int w, int h);
-
 void clearContext();
 
 

@@ -3,12 +3,12 @@
 
 
 struct Mouse {
-  static bool mouseMovePressed;
-  static bool mouseRotatePressed;
-  static bool mouseZoomPressed;
-  static int lastX;
-  static int lastY;
-  static int lastZoom;
+	static bool mouseMovePressed;
+	static bool mouseRotatePressed;
+	static bool mouseZoomPressed;
+	static int lastX;
+	static int lastY;
+	static int lastZoom;
 };
 
 void motion (int x, int y);
