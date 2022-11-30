@@ -48,6 +48,7 @@ void Camera::resize (int _W, int _H) {
 
 void Camera::move (float dx, float dy, float dz) {
 	// We change it for a orbit camera (instead of freefly)
+	// upgrade it with beginRotate for quaternion to avoid caveat of euler angles
 	glm::vec3 right = glm::cross(forward, up);
 	glm::vec3 tmpUp = glm::cross(forward, right);
 	position += dy * tmpUp - right * dx + forward * dz;
