@@ -38,11 +38,11 @@ static GLint window;
 void init() {
 	// Context::camera.initPos();
 	Context::camera.resize(SCREENWIDTH, SCREENHEIGHT);
-	Context::camera.initPos();
-	Context::camera.setPos(1.0, 1.0, 1.0);
-	Context::camera.lookAt(0.0, 0.0, 0.0);
+	// Context::camera.initPos();
+	// Context::camera.setPos(1.0, 1.0, 1.0);
+	// Context::camera.lookAt(0.0, 0.0, 0.0);
 
-	std::cerr << "view:" << glm::to_string(Context::view) << std::endl;
+	std::cerr << "view:" << glm::to_string(Context::camera.view) << std::endl;
 	// initLight ();
 	// glCullFace (GL_BACK);
 	// glEnable (GL_CULL_FACE);
@@ -62,17 +62,17 @@ void init() {
 
 void draw() {
 	if (Context::refreshMatrices) {
-		Context::projection = Context::camera.getProjectionMatrix();
-		Context::view = Context::camera.getViewMatrix();
-
-		Context::projection = glm::perspective(
-			glm::radians(65.0f),
-			(float)SCREENWIDTH/(float)SCREENHEIGHT,
-			0.001f,
-			10000.0f);
-			Context::view = glm::lookAt(glm::vec3(0.25, 0.25, 0.25), glm::vec3(0, 0, 0), glm::vec3(0, 1, 0));
-			// std::cerr << "projection:" << glm::to_string(Context::projection) << std::endl;
-			// std::cerr << "view:" << glm::to_string(Context::view) << std::endl;
+		// Context::camera::projection = Context::camera.getProjectionMatrix();
+		// Context::camera::view = Context::camera.getViewMatrix();
+		//
+		// Context::camera::projection = glm::perspective(
+		// 	glm::radians(65.0f),
+		// 	(float)SCREENWIDTH/(float)SCREENHEIGHT,
+		// 	0.001f,
+		// 	10000.0f);
+		// 	Context::camera::view = glm::lookAt(glm::vec3(0.25, 0.25, 0.25), glm::vec3(0, 0, 0), glm::vec3(0, 1, 0));
+			// std::cerr << "projection:" << glm::to_string(Context::camera::projection) << std::endl;
+			// std::cerr << "view:" << glm::to_string(Context::camera::view) << std::endl;
 			Context::refreshMatrices = false;
 		}
 		// Clear the screen
@@ -83,9 +83,13 @@ void draw() {
 			Material* material = inst.material;
 			Mesh* mesh = inst.mesh;
 			material->bind();
-			material->setMatrices(Context::projection, Context::view, inst.matrix);
+			if (Context::refreshMatrices) {
+				material->setMatrices(Context::camera.projection, Context::camera.view, inst.matrix);
+			}
 			mesh->draw();
 		}
+
+		Context::refreshMatrices = false;
 	}
 
 

@@ -6,6 +6,6 @@
 
 GLuint loadTexture2DFromFilePath(const std::string& path);
 
-void setDefaultTexture2DParameters(GLuint in_texture);
+void setDefaultTexture2DParameters(GLuint texture);
 
 #endif
