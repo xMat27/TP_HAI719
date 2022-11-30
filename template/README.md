@@ -1,37 +1,32 @@
-# Template
-Code derived from GMINI
------------
-
+# Template de TP
 # Todo
 
 - Auto-install third parties (glm/assimp)
-- use assimp to load mesh
 - simpler camera
 - simple template shader
-- simple phong shader
-- simple uv texture shader
-- Remove glew by glad (to remove old gl compability)
 
+## Dépendances
 
-Description
-------------
+- cmake (Outil pour créer des projets cross-plateforme)
+- glm (Bibliothèque de mathématiques adaptées à OpenGL)
+- glut
+- assimp (Bibliothèque d'import de modèles 3D)
 
-gmini is a small 3D "tester" program, with minimum interaction.
-Just replace the loading and/or drawing function for testing your algorithm, or visualize your particular format.
+Sur Ubuntu (avec les droits administateurs):
+```
+apt install cmake freeglut3-dev libassimp-dev libglm-dev
+```
 
+Si vous n'avez pas les droits il vous faut compiler les deux sous-modules dans le dossier "thirdparties".
+```
+git submodule update --init --recursive
+```
+Normalement le script de compilation s'occupe de compiler les deux modules une fois que le code est téléchargé.
 
-Installation
-------------
+## Compilation
 
-This is an alpha release, you may have to set up the makefile with
-your lib/include path and options.
-
-
-Compilation
-------------
-make
-
-
-Execution
-------------
-./tp
+```
+mkdir build
+cd build
+cmake ..
+```
