@@ -1,9 +1,5 @@
 # Template de TP
-# Todo
 
-- Auto-install third parties (glm/assimp)
-- simpler camera
-- simple template shader
 
 ## Dépendances
 
