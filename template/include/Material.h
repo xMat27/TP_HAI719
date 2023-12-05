@@ -7,17 +7,30 @@
 
 #include <string>
 #include <stdexcept>
+#include <iostream>
+#include <vector>
 
 struct Material {
 	// Shader program
 	GLuint m_program;
+	GLuint m_program_sky;
+	GLuint m_program_mesh;
 
 	// Material parameters
 	glm::vec4 m_color;
 	GLint m_texture;
+	GLint m_normal;
+	glm::vec3 m_lightColor;
+	glm::vec3 m_lightPos;
+
+	unsigned int cubemapTexture;
+	unsigned int skyboxVAO, skyboxVBO;
 
 	inline void check() {
-		if (m_program == 0) {
+		if (m_program_sky == 0) {
+			throw std::runtime_error("Shader program not initialized");
+		}
+		if (m_program_mesh == 0) {
 			throw std::runtime_error("Shader program not initialized");
 		}
 	}
@@ -32,9 +45,9 @@ struct Material {
 
 	virtual void clear();
 
-	void bind();
+	void bind(int idx);
 
-	virtual void internalBind();
+	virtual void internalBind(int idx);
 
 	void setMatrices(glm::mat4& projectionMatrix, glm::mat4& viewMatrix, glm::mat4& modelMatrix);
 

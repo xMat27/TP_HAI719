@@ -25,6 +25,7 @@
 #include "Mouse.h"
 #include "Keyboard.h"
 #include "SceneLoader.h"
+#include "Texture.h"
 
 
 
@@ -85,7 +86,9 @@ void draw() {
 		Instance& inst = Context::instances[i];
 		Material* material = inst.material;
 		Mesh* mesh = inst.mesh;
-		material->bind();
+		material->bind(0);
+		material->setMatrices(Context::camera.projection, Context::camera.view, inst.matrix);
+		material->bind(1);
 		material->setMatrices(Context::camera.projection, Context::camera.view, inst.matrix);
 		mesh->draw();
 	}
@@ -120,6 +123,7 @@ int main (int argc, char ** argv) {
 	glutMotionFunc(motion);
 	glutMouseFunc(mouse);
 	key('?', 0, 0);
+
 
 	std::string path(argv[1]);
 	loadDataWithAssimp(path);
